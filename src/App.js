@@ -1,18 +1,46 @@
-import './App.css';
-import Search from './components/search/search';
-import CurrentWeather from './components/current-weather/current-weather';
+import "./App.css";
+import Search from "./components/search/search";
+import CurrentWeather from "./components/current-weather/current-weather";
+import { WEATHER_API_URL, WEATHER_API_KEY } from "./api";
+import { useState } from "react";
 
 function App() {
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
 
-  const handleOnSearchChange = (searchData) =>{
-       console.log(searchData);
-       console.log("I am printed")
-  }
+  const handleOnSearchChange = (searchData) => {
+    const [lat, lon] = searchData.value.split(" ");
+    //now we fetch the 2 api calls(current weather and forecast) based on lat and lon for weather forcast for the week.
+
+    const currentWeatherFetch = fetch(
+      `${WEATHER_API_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+    );
+    const forecastFetch = fetch(
+      `${WEATHER_API_URL}/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+    );
+
+    Promise.all([currentWeatherFetch, forecastFetch])
+      .then(async (response) => {
+        const weatherResponse = await response[0].json();
+        const forecastResponse = await response[1].json();
+
+        setCurrentWeather({ city: searchData.label, ...weatherResponse });
+        setForecast({ city: searchData.label, ...forecastResponse });
+      })
+      .catch((err) => {
+        console.log("Something is wrong:" + err);
+      });
+
+    // console.log("I am printed");
+  };
+
+  console.log(currentWeather);
+  // console.log(forecast);
 
   return (
     <div className="container">
-      <Search onSearchChange={handleOnSearchChange}/>
-      <CurrentWeather />
+      <Search onSearchChange={handleOnSearchChange} />
+      {currentWeather && <CurrentWeather data={currentWeather} />}
     </div>
   );
 }

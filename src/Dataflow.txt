@@ -1,0 +1,49 @@
+Question:how loadOptions and handleOnChange are communicating?
+
+In the code you provided, loadOptions and handleOnChange are not directly communicating with each other. Instead, they are both functions defined within the Search component, and they interact with different parts of the component's functionality.
+
+Here's how each of these functions works within the Search component:
+
+loadOptions:
+
+loadOptions is a function used as a callback for the loadOptions prop of the AsyncPaginate component. This function is responsible for fetching data from the GEO API based on the user's input in the search bar and providing options for the dropdown.
+
+When a user types in the search input, the AsyncPaginate component calls the loadOptions function with the current input value (inputValue).
+
+Inside loadOptions, a fetch request is made to the GEO API, specifically to the /cities endpoint with certain query parameters (e.g., minPopulation and namePrefix).
+
+Once the API request is complete, the response data is processed and mapped into an object with options, which represents the selectable options for the dropdown.
+
+These options are returned from the loadOptions function and used by the AsyncPaginate component to populate the dropdown list with city suggestions.
+
+handleOnChange:
+
+handleOnChange is a callback function that is called when the user selects an option from the dropdown list provided by the AsyncPaginate component.
+
+This function receives searchData as its parameter, which represents the selected option from the dropdown.
+
+Inside handleOnChange, it sets the search state with the selected searchData using setSearch. This update keeps track of the selected value in the component's state.
+
+It also calls the onSearchChange function, passing the searchData as an argument. The purpose of this is to notify the parent component (App in this case) about the selected value, allowing the parent to take action based on the user's selection.
+
+In summary, loadOptions and handleOnChange are separate functions within the Search component that serve different purposes:
+
+loadOptions is responsible for fetching data and providing options for the dropdown.
+handleOnChange is responsible for handling the user's selection from the dropdown and notifying the parent component (App) about the selected value through the onSearchChange callback.
+
+Now that,
+Here's what happens in the App component after receiving the selected value:
+
+The handleOnSearchChange function extracts the latitude (lat) and longitude (lon) from the searchData object, which contains the selected city's information.
+
+It then initiates two fetch requests. One fetches the current weather data using the latitude and longitude, and the other fetches the weather forecast data for that location.
+
+The Promise.all method is used to wait for both fetch requests to complete.
+
+Once both requests are complete, the response data (current weather and forecast) is extracted and stored in the weatherResponse and forecastResponse variables.
+
+The setCurrentWeather and setForecast functions are called to update the state with this data. The state variables currentWeather and forecast will now contain the selected city's weather and forecast data.
+
+Finally, a message is logged to the console with "I am printed."
+
+So, after the user selects a city in the Search component, the App component fetches weather data, updates its state with the fetched data, and can use this data to render or display information related to the selected city's weather and forecast.

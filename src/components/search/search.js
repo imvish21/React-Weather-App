@@ -5,9 +5,10 @@ import { GEO_API_URL, geoApiOptions } from "../../api";
 const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
 
-  const handleOnChange = (searchData) => {
+  const handleOnChange = (searchData) => { //search data represents the selected options
+    // console.log(searchData);
     setSearch(searchData);
-    onSearchChange(searchData);
+    onSearchChange(searchData); //The purpose of this is to notify the parent component (App in this case) about the selected value, allowing the parent to take action based on the user's selection.
   };
   const loadOptions =(inputValue) => {
     return fetch(

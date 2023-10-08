@@ -7,7 +7,7 @@ const Search = ({ onSearchChange }) => {
 
   const handleOnChange = (searchData) => { //search data represents the selected options
     // console.log(searchData);
-    setSearch(searchData);
+    setSearch("");
     onSearchChange(searchData); //The purpose of this is to notify the parent component (App in this case) about the selected value, allowing the parent to take action based on the user's selection.
   };
   const loadOptions =(inputValue) => {
